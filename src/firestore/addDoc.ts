@@ -39,7 +39,7 @@ import {
  *     console.error('Error setting document:', error);
  * }
  */
-export async function setDocRest<T extends object>(
+export async function addDocRest<T extends object>(
 	docPath: string,
 	docData: T,
 	options?: {

@@ -1,44 +1,49 @@
 {
-  "name": "firebase-admin-rest",
-  "version": "0.2.4",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "description": "Tiny Typesafe Firebase Admin REST API wrapper that works on Vercel Edge functions, Bun, Cloudflare workers, Deno or any JS runtime.",
-  "scripts": {
-    "build": "bun run build.mjs",
-    "prepublishOnly": "bun run build",
-    "dev-test": "bun run src/tests/index.ts"
-  },
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "firebase",
-    "firebase rest wrapper",
-    "firebase admin edge",
-    "edge runtime",
-    "bun",
-    "workers",
-    "cloudflare",
-    "deno"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/Moe03/firebase-admin-rest#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Moe03/firebase-admin-rest.git"
-  },
-  "bugs": "https://github.com/Moe03/firebase-admin-rest/issues",
-  "author": "Moe Ayman <moeaymandev@gmail.com>",
-  "devDependencies": {
-    "@types/bun": "^1.0.0",
-    "bun-plugin-dts": "^0.2.1",
-    "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "@tsndr/cloudflare-worker-jwt": "^2.5.3",
-    "crypto-js": "^4.2.0",
-    "dotenv": "^16.4.5",
-    "moment": "^2.30.1"
-  }
+	"name": "firebase-admin-rest",
+	"version": "0.2.4",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"description": "Tiny Typesafe Firebase Admin REST API wrapper that works on Vercel Edge functions, Bun, Cloudflare workers, Deno or any JS runtime.",
+	"scripts": {
+		"build": "bun run build.mjs",
+		"prepublishOnly": "bun run build",
+		"dev-test": "bun run src/tests/index.ts",
+		"test:unit": "vitest",
+		"test": "npm run test:unit -- --run",
+		"format": "prettier --write ."
+	},
+	"files": [
+		"dist"
+	],
+	"keywords": [
+		"firebase",
+		"firebase rest wrapper",
+		"firebase admin edge",
+		"edge runtime",
+		"bun",
+		"workers",
+		"cloudflare",
+		"deno"
+	],
+	"license": "MIT",
+	"homepage": "https://github.com/Moe03/firebase-admin-rest#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Moe03/firebase-admin-rest.git"
+	},
+	"bugs": "https://github.com/Moe03/firebase-admin-rest/issues",
+	"author": "Moe Ayman <moeaymandev@gmail.com>",
+	"devDependencies": {
+		"@types/bun": "^1.0.0",
+		"bun-plugin-dts": "^0.2.1",
+		"prettier": "^3.3.3",
+		"typescript": "^5.4.5",
+		"vitest": "^2.1.4"
+	},
+	"dependencies": {
+		"@tsndr/cloudflare-worker-jwt": "^2.5.3",
+		"crypto-js": "^4.2.0",
+		"dotenv": "^16.4.5",
+		"moment": "^2.30.1"
+	}
 }

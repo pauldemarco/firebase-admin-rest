@@ -26,7 +26,7 @@ import { formatValuesWithType, generateFirebaseReqHeaders, humanValueToDumbGoogl
  * @example
  * // Import the function if not already imported
  * // import { queryDocsRest } from 'your-module-name';
- * 
+ *
  * // Example usage
  * const collectionPath = 'users';
  * const options = {
@@ -42,7 +42,7 @@ import { formatValuesWithType, generateFirebaseReqHeaders, humanValueToDumbGoogl
  *     limit: 10,
  *     page: 1
  * };
- * 
+ *
  * try {
  *     const result = await queryDocsRest<User>(collectionPath, options);
  *     console.log('Queried documents:', result);
@@ -51,115 +51,127 @@ import { formatValuesWithType, generateFirebaseReqHeaders, humanValueToDumbGoogl
  * }
  */
 export async function queryDocsRest<T = any>(
-    collectionPath: string,
-    options?: {
-        where?: {
-            field: string,
-            op: WhereFilterOpREST,
-            value: any
-        }[],
-        orderBy?: {
-            field: string,
-            direction: DirectionOpREST
-        },
-        limit?: number,
-        page?: number,
-        db?: string
-    }): Promise<GetDocumentsRes<T>> {
+	collectionPath: string,
+	options?: {
+		where?: {
+			field: string;
+			op: WhereFilterOpREST;
+			value: any;
+		}[];
+		orderBy?: {
+			field: string;
+			direction: DirectionOpREST;
+		};
+		limit?: number;
+		page?: number;
+		db?: string;
+	}
+): Promise<GetDocumentsRes<T>> {
+	const typedEnv = process.env as TypedEnv;
+	const offset = options?.page ? (options.page - 1) * (options.limit || 20) : 0;
+	let documentArr = collectionPath.includes(`/`) ? collectionPath.split(`/`) : [];
+	let collectionId = documentArr.length ? documentArr.pop() : collectionPath;
+	const parentDoc = documentArr?.length ? documentArr.join('/') : '';
+	const ref = parentDoc ? `${parentDoc}/${collectionId}` : collectionId;
 
-    const typedEnv = process.env as TypedEnv;
-    const offset = options?.page ? (options.page - 1) * (options.limit || 20) : 0;
-    let documentArr = collectionPath.includes(`/`) ? collectionPath.split(`/`) : [];
-    let collectionId = documentArr.length ? documentArr.pop() : collectionPath;
-    const parentDoc = documentArr?.length ? documentArr.join('/') : '';
-    const ref = parentDoc ? `${parentDoc}/${collectionId}` : collectionId;
+	let finalJson: any = {
+		structuredQuery: {
+			from: [
+				{
+					collectionId: collectionId
+				}
+			],
+			limit: options?.limit || 100
+		}
+	};
+	// console.log(options?.where)
+	for (const whereQuery of options?.where || []) {
+		finalJson.structuredQuery.where = {
+			compositeFilter: {
+				op: 'AND',
+				filters: [
+					...(finalJson?.structuredQuery?.where?.compositeFilter?.filters || []),
+					{
+						fieldFilter: {
+							field: {
+								fieldPath: whereQuery.field
+							},
+							op: whereQuery.op,
+							value: humanValueToDumbGoogle(whereQuery.value)
+						}
+					}
+				]
+			}
+		};
+	}
+	if (options?.orderBy && options?.orderBy.field) {
+		finalJson.structuredQuery.orderBy = [
+			{
+				field: {
+					fieldPath: options.orderBy.field
+				},
+				direction: options.orderBy.direction
+			}
+		];
+	}
+	if (offset) {
+		finalJson.structuredQuery.offset = offset;
+	}
+	// console.log(JSON.stringify(finalJson))
+	const response: any = await fetch(
+		`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents${parentDoc ? `/${parentDoc}` : ''}:runQuery`,
+		{
+			method: 'POST',
+			headers: generateFirebaseReqHeaders(),
+			body: JSON.stringify(finalJson)
+		}
+	)
+		.then((res) => res.json())
+		.catch((err) => {
+			throw new Error(`Error fetching in querying documents from Firestore: `, err);
+		});
 
-    let finalJson: any = {
-        "structuredQuery": {
-            "from": [{
-                "collectionId": collectionId,
-            }],
-            limit: options?.limit || 100
-        },
-    }
-    // console.log(options?.where)
-    for (const whereQuery of options?.where || []) {
-        finalJson.structuredQuery.where = {
-            "compositeFilter": {
-                "op": "AND",
-                "filters": [
-                    ...finalJson?.structuredQuery?.where?.compositeFilter?.filters || [],
-                    {
-                        "fieldFilter": {
-                            "field": {
-                                "fieldPath": whereQuery.field
-                            },
-                            "op": whereQuery.op,
-                            "value": humanValueToDumbGoogle(whereQuery.value)
-                        }
-                    }
-                ]
-            }
+	if (response.error || response[0]?.error) {
+		console.error(JSON.stringify(response[0].error));
+		throw new Error(`Error in querying documents from Firestore:`);
+	}
 
-
-        }
-    }
-    if (options?.orderBy && options?.orderBy.field) {
-        finalJson.structuredQuery.orderBy = [
-            {
-                "field": {
-                    "fieldPath": options.orderBy.field
-                },
-                "direction": options.orderBy.direction
-            }
-        ]
-    }
-    if (offset) {
-        finalJson.structuredQuery.offset = offset;
-    }
-    // console.log(JSON.stringify(finalJson))
-    const response: any = await fetch(`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents${parentDoc ? `/${parentDoc}` : ''}:runQuery`, {
-        method: 'POST',
-        headers: generateFirebaseReqHeaders(),
-        body: JSON.stringify(finalJson)
-    }).then((res) => res.json()).catch((err) => {
-        throw new Error(`Error fetching in querying documents from Firestore: `, err);
-    });
-
-    if (response.error || response[0]?.error) {
-        console.error(JSON.stringify(response[0].error))
-        throw new Error(`Error in querying documents from Firestore:`);
-    }
-
-    if (response.length > 0) {
-        const docsArr = response.map((docRef: {
-            document: {
-                name: string,
-                fields: {
-                    [key: string]: any
-                }
-            }
-        }) => {
-            const res = formatValuesWithType(docRef?.document);
-            return res;
-        }).filter((doc: any) => doc.id);
-        return {
-            size: docsArr.length,
-            empty: docsArr.length === 0,
-            docs: docsArr.map((doc: any) => ({
-                id: doc.id,
-                ref,
-                exists: () => true,
-                data: () => doc
-            } as Document<T>)),
-            jsonResponse: response
-        }
-    } else {
-        return {
-            size: 0,
-            empty: true,
-            docs: [],
-            jsonResponse: response
-        }; // No document found
-    }
+	if (response.length > 0) {
+		const docsArr = response
+			.map(
+				(docRef: {
+					document: {
+						name: string;
+						fields: {
+							[key: string]: any;
+						};
+					};
+				}) => {
+					const res = formatValuesWithType(docRef?.document);
+					return res;
+				}
+			)
+			.filter((doc: any) => doc.id);
+		return {
+			size: docsArr.length,
+			empty: docsArr.length === 0,
+			docs: docsArr.map(
+				(doc: any) =>
+					({
+						id: doc.id,
+						ref,
+						exists: () => true,
+						data: () => doc
+					}) as Document<T>
+			),
+			jsonResponse: response
+		};
+	} else {
+		return {
+			size: 0,
+			empty: true,
+			docs: [],
+			jsonResponse: response
+		}; // No document found
+	}
 }

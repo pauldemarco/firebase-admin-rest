@@ -1,5 +1,3 @@
-import { initFirebaseRest } from "./initFAS"
+import { initFirebaseRest } from './initFAS';
 
-export {
-    initFirebaseRest
-}
+export { initFirebaseRest };

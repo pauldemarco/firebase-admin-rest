@@ -1,31 +1,19 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "es2015",
-      "es2016",
-      "es2017",
-      "es2018",
-      "es2019",
-      "es2020",
-      "esnext"
-    ],
-    "target": "ESNext",
-    "module": "NodeNext",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
-    "noImplicitAny": true,
-    "allowJs": true,
-    "noEmit": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "baseUrl": "."
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+	"compilerOptions": {
+		"lib": ["es2015", "es2016", "es2017", "es2018", "es2019", "es2020", "esnext"],
+		"target": "ESNext",
+		"module": "NodeNext",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"noUnusedLocals": true,
+		"noImplicitAny": true,
+		"allowJs": true,
+		"noEmit": true,
+		"outDir": "dist",
+		"resolveJsonModule": true,
+		"baseUrl": "."
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules"]
 }

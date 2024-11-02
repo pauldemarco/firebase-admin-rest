@@ -1,86 +1,85 @@
 export type OrderByDirection = 'desc' | 'asc';
 export type WhereFilterOp =
-| '<'
-| '<='
-| '=='
-| '!='
-| '>='
-| '>'
-| 'array-contains'
-| 'in'
-| 'not-in'
-| 'array-contains-any';
+	| '<'
+	| '<='
+	| '=='
+	| '!='
+	| '>='
+	| '>'
+	| 'array-contains'
+	| 'in'
+	| 'not-in'
+	| 'array-contains-any';
 /**
  * Firebase Admin Configuration interface.
  */
 export interface FirebaseAdminConfig {
-    /**
-     * The type of the service account.
-     */
-    type?: string;
-    /**
-     * The project ID associated with the service account.
-     */
-    project_id: string;
-    /**
-     * The private key ID of the service account.
-     */
-    private_key_id?: string;
-    /**
-     * The private key of the service account.
-     */
-    private_key: string;
-    /**
-     * The client email of the service account.
-     */
-    client_email: string;
-    /**
-     * The client ID of the service account.
-     */
-    client_id?: string;
-    /**
-     * The authentication URI for the service account.
-     */
-    auth_uri?: string;
-    /**
-     * The token URI for the service account.
-     */
-    token_uri?: string;
-    /**
-     * The authentication provider's x509 certificate URL.
-     */
-    auth_provider_x509_cert_url?: string;
-    /**
-     * The client's x509 certificate URL.
-     */
-    client_x509_cert_url?: string;
-    /**
-     * The universe domain associated with the service account.
-     */
-    universe_domain?: string;
+	/**
+	 * The type of the service account.
+	 */
+	type?: string;
+	/**
+	 * The project ID associated with the service account.
+	 */
+	project_id: string;
+	/**
+	 * The private key ID of the service account.
+	 */
+	private_key_id?: string;
+	/**
+	 * The private key of the service account.
+	 */
+	private_key: string;
+	/**
+	 * The client email of the service account.
+	 */
+	client_email: string;
+	/**
+	 * The client ID of the service account.
+	 */
+	client_id?: string;
+	/**
+	 * The authentication URI for the service account.
+	 */
+	auth_uri?: string;
+	/**
+	 * The token URI for the service account.
+	 */
+	token_uri?: string;
+	/**
+	 * The authentication provider's x509 certificate URL.
+	 */
+	auth_provider_x509_cert_url?: string;
+	/**
+	 * The client's x509 certificate URL.
+	 */
+	client_x509_cert_url?: string;
+	/**
+	 * The universe domain associated with the service account.
+	 */
+	universe_domain?: string;
 }
 
 export interface InitFirebaseAdminInput {
-    serviceAccount?: FirebaseAdminConfig
-    databaseId?: string;
-    ignoreUndefinedValues?: boolean;
+	serviceAccount?: FirebaseAdminConfig;
+	databaseId?: string;
+	ignoreUndefinedValues?: boolean;
 }
 
 export interface InitFirebaseAdminOuput {
-    serviceAccount: FirebaseAdminConfig,
-    databaseId: string,
-    accessToken: string
+	serviceAccount: FirebaseAdminConfig;
+	databaseId: string;
+	accessToken: string;
 }
 
-
 export interface FirestoreDocument {
-    stringValue?: string,
-    integerValue?: number,
-    doubleValue?: number,
-    booleanValue?: boolean,
-    arrayValue?: { values: any[] },
-    mapValue?: { fields: any },
-    nullValue?: null
+	stringValue?: string;
+	integerValue?: number;
+	doubleValue?: number;
+	booleanValue?: boolean;
+	arrayValue?: { values: any[] };
+	mapValue?: { fields: any };
+	nullValue?: null;
 }
 
 /**
@@ -91,18 +90,17 @@ export interface FirestoreDocument {
  * @param error - Optional. Represents any error information in the response.
  */
 export interface Document<T = any> {
-    id: string,
-    ref: string,
-    data: () => T | undefined,
-    exists: () => boolean,
+	id: string;
+	ref: string;
+	data: () => T | undefined;
+	exists: () => boolean;
 }
 
 export interface GetDocumentRes<T = any> extends Document<T> {
-    response?: any,
-    jsonResponse?: object,
-    error?: any
+	response?: any;
+	jsonResponse?: object;
+	error?: any;
 }
-
 
 /**
  * Represents a RESTful response object containing documents.
@@ -113,44 +111,53 @@ export interface GetDocumentRes<T = any> extends Document<T> {
  * @param error - Optional. Represents any error information in the response.
  */
 export interface GetDocumentsRes<T = any> {
-    size: number;
-    empty: boolean;
-    docs: Document<T>[];
-    error?: any;
-    jsonResponse?: object;
+	size: number;
+	empty: boolean;
+	docs: Document<T>[];
+	error?: any;
+	jsonResponse?: object;
 }
 
 export interface toJsonResponse extends GetDocumentsRes {
-    docReads?: number;
+	docReads?: number;
 }
 
 export interface DJGet<T = any> {
-    size: number;
-    empty: boolean;
-    docs: Document<T>[];
-    error?: any;
-    jsonResponse?: object;
-    docReads?: number;
+	size: number;
+	empty: boolean;
+	docs: Document<T>[];
+	error?: any;
+	jsonResponse?: object;
+	docReads?: number;
 }
 
 export interface TypedEnv {
-    FIREBASE_REST_SERVICE_ACCOUNT: string;
-    FIREBASE_REST_ACCESS_TOKEN: string;
-    FIREBASE_REST_PROJECT_ID: string;
-    FIREBASE_REST_DATABASE_ID: string;
-    [key: string]: string;
+	FIREBASE_REST_SERVICE_ACCOUNT: string;
+	FIREBASE_REST_ACCESS_TOKEN: string;
+	FIREBASE_REST_PROJECT_ID: string;
+	FIREBASE_REST_DATABASE_ID: string;
+	[key: string]: string;
 }
 
 export interface InfoResponse {
-    success: boolean;
-    message: string;
-    jsonResponse: any;
+	success: boolean;
+	message: string;
+	jsonResponse: any;
 }
 
-export type WhereFilterOpREST = "EQUAL" | "NOT_EQUAL" | "LESS_THAN" | "LESS_THAN_OR_EQUAL" | "GREATER_THAN" | "GREATER_THAN_OR_EQUAL" | "ARRAY_CONTAINS" | "ARRAY_CONTAINS_ANY" | "IN" | "NOT_IN";
+export type WhereFilterOpREST =
+	| 'EQUAL'
+	| 'NOT_EQUAL'
+	| 'LESS_THAN'
+	| 'LESS_THAN_OR_EQUAL'
+	| 'GREATER_THAN'
+	| 'GREATER_THAN_OR_EQUAL'
+	| 'ARRAY_CONTAINS'
+	| 'ARRAY_CONTAINS_ANY'
+	| 'IN'
+	| 'NOT_IN';
 
-export type DirectionOpREST = "ASCENDING" | "DESCENDING";
-
+export type DirectionOpREST = 'ASCENDING' | 'DESCENDING';
 
 /**
  * Nested class for operations related to documents.
@@ -161,12 +168,12 @@ export type DirectionOpREST = "ASCENDING" | "DESCENDING";
  * @template T - The type of the documents in the collection.
  */
 export interface CollectionOperationsInstance<T extends object> {
-    where(field: string, op: WhereFilterOp, value: any): CollectionOperationsInstance<T>;
-    orderBy(field: string, direction: OrderByDirection): CollectionOperationsInstance<T>;
-    limit(limit: number): CollectionOperationsInstance<T>;
-    delete(): Promise<any>;
-    page(page: number): CollectionOperationsInstance<T>;
-    tojson(): Promise<toJsonResponse>;
-    todocs(data: T[]): Promise<any>;
-    get(): Promise<GetDocumentsRes<T>>;
+	where(field: string, op: WhereFilterOp, value: any): CollectionOperationsInstance<T>;
+	orderBy(field: string, direction: OrderByDirection): CollectionOperationsInstance<T>;
+	limit(limit: number): CollectionOperationsInstance<T>;
+	delete(): Promise<any>;
+	page(page: number): CollectionOperationsInstance<T>;
+	tojson(): Promise<toJsonResponse>;
+	todocs(data: T[]): Promise<any>;
+	get(): Promise<GetDocumentsRes<T>>;
 }

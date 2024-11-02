@@ -11,14 +11,13 @@
  * @returns Promise<void>
  */
 export async function FUNCTION_NAME(
-    path: string,
-    options: {
-        serviceAccount: {
-            projectId: string;
-            privateKey: string;
-            clientEmail: string;
-        };
-        databaseId?: string;
-    }) {
-
-}
+	path: string,
+	options: {
+		serviceAccount: {
+			projectId: string;
+			privateKey: string;
+			clientEmail: string;
+		};
+		databaseId?: string;
+	}
+) {}
