@@ -119,7 +119,7 @@ export async function queryDocsRest<T = any>(
 	}
 	// console.log(JSON.stringify(finalJson))
 	const response: any = await fetch(
-		`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents${parentDoc ? `/${parentDoc}` : ''}:runQuery`,
+		`https://firestore.googleapis.com/v1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents${parentDoc ? `/${parentDoc}` : ''}:runQuery`,
 		{
 			method: 'POST',
 			headers: generateFirebaseReqHeaders(),

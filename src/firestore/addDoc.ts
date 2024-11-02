@@ -1,7 +1,6 @@
 import { GetDocumentRes } from '../types';
 import { TypedEnv } from '../types';
 import {
-	formatValuesWithType,
 	generateFirebaseReqHeaders,
 	googleDumbObjectToHuman,
 	humanObjectToDumbGoogle,
@@ -36,7 +35,7 @@ export async function addDocRest<T extends object>(
 	const dumbGoogleObject = humanObjectToDumbGoogle(docData);
 
 	const res: any = await fetch(
-		`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${collectionPath}`,
+		`https://firestore.googleapis.com/v1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${collectionPath}`,
 		{
 			method: 'POST',
 			headers: generateFirebaseReqHeaders(finalDb),

@@ -23,7 +23,7 @@ export async function deleteDocRest(
 	const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
 	try {
 		const deleteResponse: any = await fetch(
-			`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}`,
+			`https://firestore.googleapis.com/v1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}`,
 			{
 				method: 'DELETE',
 				headers: generateFirebaseReqHeaders(finalDb)

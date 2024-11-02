@@ -19,7 +19,7 @@ export async function getDocRest<T = any>(
 	const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
 	try {
 		const response: any = await fetch(
-			`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}`,
+			`https://firestore.googleapis.com/v1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}`,
 			{
 				method: 'GET',
 				headers: generateFirebaseReqHeaders(finalDb)

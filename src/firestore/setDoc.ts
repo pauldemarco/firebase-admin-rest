@@ -62,7 +62,7 @@ export async function setDocRest<T extends object>(
 				.join('')}`
 		: '';
 	const setDocRes: any = await fetch(
-		`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}${mergeAppend}`,
+		`https://firestore.googleapis.com/v1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}${mergeAppend}`,
 		{
 			method: 'PATCH',
 			headers: generateFirebaseReqHeaders(finalDb),

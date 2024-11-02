@@ -5,7 +5,7 @@ export async function testFbCredentials() {
 	try {
 		const typedEnv = { ...process.env } as TypedEnv;
 		const response: any = await fetch(
-			`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/test/test`,
+			`https://firestore.googleapis.com/v1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${typedEnv.FIREBASE_REST_DATABASE_ID}/documents/test/test`,
 			{
 				method: 'GET',
 				headers: generateFirebaseReqHeaders()
