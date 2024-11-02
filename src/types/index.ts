@@ -176,4 +176,5 @@ export interface CollectionOperationsInstance<T extends object> {
 	tojson(): Promise<toJsonResponse>;
 	todocs(data: T[]): Promise<any>;
 	get(): Promise<GetDocumentsRes<T>>;
+	add(data: T): Promise<GetDocumentRes<T>>;
 }

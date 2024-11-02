@@ -1,87 +1,71 @@
-import { GetDocumentRes, TypedEnv } from '../types';
+import { GetDocumentRes } from '../types';
+import { TypedEnv } from '../types';
 import {
+	formatValuesWithType,
 	generateFirebaseReqHeaders,
+	googleDumbObjectToHuman,
 	humanObjectToDumbGoogle,
 	removeFirstAndLastSlash
 } from './utils';
 
 /**
- * Sets a document in a Firestore collection using REST API, DEFAULT WILL OVERWRITE THE DOCUMENT.
+ * Adds a new document to a Firestore collection using REST API.
  *
- * @remarks
- * This function allows setting a document in a Firestore collection using the REST API.
- *
- * @param collectionPath - The path to the collection.
- * @param docData - The document to set in the collection.
- * @param options - Additional options for setting the document.
- * @param options.db - Optional. The database-id instead of the default one.
- * @param options.merge - Optional. Whether to merge the document with existing documents default WILL OVERWRITE THE DOCUMENT.
- * @returns A Promise resolving when the document is successfully set.
- *
- * @typeparam T - The type of the document to set, extending an object type.
- *
- * @example
- * // Import the function if not already imported
- * // import { setDocRest } from 'your-module-name';
- *
- * // Example usage
- * const collectionPath = 'users';
- * const document = {
- *     name: 'John Doe',
- *     age: 30,
- *     email: 'johndoe@example.com'
- * };
- *
- * try {
- *     const doc = await setDocRest<User>(collectionPath, document);
- *     console.log('Document set successfully.', doc.id);
- * } catch (error) {
- *     console.error('Error setting document:', error);
- * }
+ * @param collectionPath - The path of the collection where the document will be added.
+ * @param docData - The data of the document to be added.
+ * @param options - Additional options for the operation.
+ * @param options.db - The name of the Firestore database to use. (optional)
+ * @returns A Promise that resolves to the result of the add operation.
  */
 export async function addDocRest<T extends object>(
-	docPath: string,
+	collectionPath: string,
 	docData: T,
 	options?: {
 		db?: string;
-		merge?: boolean;
 	}
 ): Promise<GetDocumentRes<T>> {
-	// if(options.merge === undefined){
-	//     options.merge = true;
-	// }
 	const typedEnv = process.env as TypedEnv;
 	const finalDb = options?.db || typedEnv.FIREBASE_REST_DATABASE_ID;
-	docPath = removeFirstAndLastSlash(docPath);
-	const docId = docPath?.includes(`/`) ? docPath.split('/').pop() || docPath : docPath;
+	collectionPath = removeFirstAndLastSlash(collectionPath);
+	// const addDocRes = await setDocRest<T>(`${collectionPath}/${newDocId}`, docData, {
+	// 	merge: false,
+	// 	db: options?.db
+	// });
+	// return addDocRes;
+
 	const dumbGoogleObject = humanObjectToDumbGoogle(docData);
 
-	const mergeAppend = options?.merge
-		? `?${Object.keys(docData)
-				.map((key, index) => (index !== 0 ? '&' : '') + `updateMask.fieldPaths=${key}`)
-				.join('')}`
-		: '';
-	const setDocRes: any = await fetch(
-		`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${docPath}${mergeAppend}`,
+	const res: any = await fetch(
+		`https://firestore.googleapis.com/v1beta1/projects/${typedEnv.FIREBASE_REST_PROJECT_ID}/databases/${finalDb}/documents/${collectionPath}`,
 		{
-			method: 'PATCH',
+			method: 'POST',
 			headers: generateFirebaseReqHeaders(finalDb),
 			body: JSON.stringify({
 				fields: dumbGoogleObject
 			})
 		}
 	);
-	if (setDocRes.status !== 200) {
+	if (res.status !== 200) {
 		throw new Error(
-			`Non 200 status req, error setting/updating document ${docPath} in Firestore `,
-			setDocRes
+			`Non 200 status req, error creating document at ${collectionPath} in Firestore `,
+			res
 		);
 	}
+	const jsonResponse = await res.json();
+	const docId = jsonResponse.name.split('/').pop();
+	const data = googleDumbObjectToHuman(jsonResponse.fields);
 	return {
 		id: docId,
+		ref: `${collectionPath}/${docId}`,
 		exists: () => true,
-		ref: docPath,
-		data: () => docData,
-		response: setDocRes
+		data: () => data as T,
+		jsonResponse
 	};
+	// return {
+	// 	id: docId,
+	// 	exists: () => true,
+	// 	ref: docPath,
+	// 	data: () => docData,
+	// 	response: setDocRes
+	// };
 }

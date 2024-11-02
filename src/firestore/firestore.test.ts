@@ -19,9 +19,9 @@ describe('firestore tests', () => {
 		expect(doc.exists()).toBe(false);
 	});
 
-	test('', async () => {
-		const doc = await db.doc('users/johndoe').get();
-
-		expect(doc.exists()).toBe(false);
+	test('document should be created by firestore', async () => {
+		const doc = await db.collection('users').add({ hello: 'world' });
+		expect(doc.id).not.toBeNull();
+		expect(doc.data()).toStrictEqual({ hello: 'world' });
 	});
 });

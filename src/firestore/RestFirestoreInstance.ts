@@ -14,6 +14,7 @@ import { getDocRest } from './getDoc';
 import { queryDocsRest } from './queryDocs';
 import { orderOpToRest, removeFirstAndLastSlash, whereOpToRest } from './utils';
 import { setDocRest } from './setDoc';
+import { addDocRest } from './addDoc';
 import { DJDeleteREST, DocsToJSONRest, JSONtoDocsRest } from './helper_utils/DJUtils';
 import { deleteDocRest } from './deleteDoc';
 
@@ -242,6 +243,14 @@ class CollectionOperations<T extends object> implements CollectionOperationsInst
 		});
 		// }
 		return docsRes;
+	}
+
+	public async add(data: T): Promise<GetDocumentRes<T>> {
+		// Implement set operation here
+		const addDocRes = await addDocRest(this.collectionPath, data, {
+			db: this.databaseId
+		});
+		return addDocRes;
 	}
 }
 
